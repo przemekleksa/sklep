@@ -15,7 +15,7 @@ export interface StoreApiResponse {
 }
 
 const getProducts = async () => {
-  const res = await fetch("https://fakestoreapi.com/products");
+  const res = await fetch("https://naszsklep-api.vercel.app/api/products");
   const data: StoreApiResponse[] = await res.json();
   return data;
 };
@@ -38,6 +38,7 @@ const ProductListItemCSRPage = () => {
           <li key={product.id} className="shadow border-2 p-4">
             <ProductListItem
               data={{
+                id: product.id,
                 image: product.image,
                 imageAlt: product.title,
                 title: product.title,

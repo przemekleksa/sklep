@@ -1,5 +1,5 @@
-import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
-import { useRouter } from "next/router";
+import { InferGetStaticPropsType } from "next";
+import Link from "next/link";
 import { ProductDetails } from "../../components/Product";
 
 export interface StoreApiResponse {
@@ -15,9 +15,15 @@ export interface StoreApiResponse {
   };
 }
 
+type InferGetStaticPaths<T> = T extends () => Promise<{
+  paths: Array<{ params: infer R }>;
+}>
+  ? { params?: R }
+  : never;
+
 export const getStaticProps = async ({
   params,
-}: GetStaticPropsContext<{ productId: string }>) => {
+}: InferGetStaticPaths<typeof getStaticPaths>) => {
   if (!params?.productId) {
     return {
       props: {},
@@ -26,7 +32,7 @@ export const getStaticProps = async ({
   }
 
   const res = await fetch(
-    `https://fakestoreapi.com/products/${params?.productId}`
+    `https://naszsklep-api.vercel.app/api/products/${params?.productId}`
   );
 
   const data: StoreApiResponse | null = await res.json();
@@ -34,6 +40,22 @@ export const getStaticProps = async ({
     props: {
       data,
     },
+  };
+};
+
+export const getStaticPaths = async () => {
+  const res = await fetch("https://naszsklep-api.vercel.app/api/products");
+  const data: StoreApiResponse[] = await res.json();
+
+  return {
+    paths: data.map((product) => {
+      return {
+        params: {
+          productId: product.id.toString(),
+        },
+      };
+    }),
+    fallback: false,
   };
 };
 
@@ -46,8 +68,12 @@ const ProductIdPage = ({
 
   return (
     <div>
+      <Link href="/products">
+        <a>Go back to main site</a>
+      </Link>
       <ProductDetails
         data={{
+          id: data.id,
           title: data.title,
           image: data.image,
           imageAlt: data.title,

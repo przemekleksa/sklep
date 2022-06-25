@@ -1,4 +1,6 @@
-import { InferGetStaticPropsType } from "next";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useQuery } from "react-query";
 import Pagination from "../components/Pagination";
 import ProductListItem from "../components/Product";
 
@@ -15,19 +17,35 @@ export interface StoreApiResponse {
   };
 }
 
-export const getStaticProps = async () => {
-  const res = await fetch("https://naszsklep-api.vercel.app/api/products");
+const getProducts = async (offset: string | string[]) => {
+  const res = await fetch(
+    `https://naszsklep-api.vercel.app/api/products?take=25&offset=${offset}`
+  );
   const data: StoreApiResponse[] = await res.json();
-  return {
-    props: {
-      data,
-    },
-  };
+  return data;
 };
 
-const ProductPage = ({
-  data,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const ProductListItemCSRPage = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    // codes using router.query
+  }, [router.isReady]);
+
+  const { isLoading, data, error } = useQuery("products", () =>
+    getProducts(router.query.offset!)
+  );
+
+  if (isLoading) {
+    return <div>Loading ...</div>;
+  }
+
+  if (!data || error) {
+    return <div>Something went wrong</div>;
+  }
+
   return (
     <>
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -51,4 +69,4 @@ const ProductPage = ({
   );
 };
 
-export default ProductPage;
+export default ProductListItemCSRPage;
