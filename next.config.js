@@ -8,6 +8,7 @@ const nextConfig = {
       "naszsklep-api.vercel.app",
       "fakestoreapi.com",
     ],
+    formats: ["image/avif", "image/webp"],
   },
 };
 
