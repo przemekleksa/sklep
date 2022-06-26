@@ -33,7 +33,7 @@ const ProductPage = ({
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         {data.map((product) => {
           return (
-            <li key={product.id} className="shadow border-2 p-4">
+            <li key={product.id} className="shadow border-2">
               <ProductListItem
                 data={{
                   id: product.id,

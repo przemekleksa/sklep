@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Rating from "./Rating";
+import Image from "next/image";
 
 interface ProductDetails {
   id: number;
@@ -26,13 +27,22 @@ interface ProductDetailsProps {
 const ProductListItem = ({ data }: ProductListItemProps) => {
   return (
     <>
-      <Link href={`/products/${data.id}`}>
-        <a>
-          <img src={data.image} alt={data.imageAlt} />
+      <div className="bg-white p-4">
+        <Link href={`/products/${data.id}`}>
+          <a>
+            <Image
+              src={data.image}
+              alt={data.imageAlt}
+              layout="responsive"
+              width={16}
+              height={9}
+              objectFit="contain"
+            />
 
-          <h2 className="p-4 font-bold text-center">{data.title}</h2>
-        </a>
-      </Link>
+            <h2 className="p-4 font-bold text-center text-3xl">{data.title}</h2>
+          </a>
+        </Link>
+      </div>
     </>
   );
 };
@@ -42,10 +52,19 @@ export const ProductDetails = ({
 }: ProductDetailsProps) => {
   return (
     <>
-      <img src={image} alt={imageAlt} />
-      <h2 className="p-4 font-bold text-center">{title}</h2>
-      <p>{description}</p>
-      <Rating rating={rating} />
+      <div className="bg-white p-4">
+        <Image
+          src={image}
+          alt={imageAlt}
+          layout="responsive"
+          width={16}
+          height={9}
+          objectFit="contain"
+        />
+        <h2 className="p-4 font-bold text-center">{title}</h2>
+        <p>{description}</p>
+        <Rating rating={rating} />
+      </div>
     </>
   );
 };
