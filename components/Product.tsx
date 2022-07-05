@@ -61,6 +61,7 @@ export const ProductDetails = ({
           height={9}
           objectFit="contain"
         />
+
         <h2 className="p-4 font-bold text-center">{title}</h2>
         <p>{description}</p>
         <Rating rating={rating} />
